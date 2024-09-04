@@ -180,22 +180,6 @@ def list_all_ref_features_in_pfc(file):
         workspace[xml_feature.find('Root').text]=features
     return workspace
 
-
-# for feature in root.findall('Feature'):
-# name = feature.find('Name').text
-# if name == 'Kernel_XhciPeiBin_Rev5.6':
-# url = feature.find('Repository/Url').text
-# print("    Extracted URL:", url)
-# break
-
-
-# 呼叫函數並打印所有遠端倉庫的 URL
-# remote_urls = get_git_remote_urls()
-# if remote_urls:
-# print("    Git remote URLs:")
-# for name, url in remote_urls.items():
-# print(f"    {name}: {url}")
-
 # List all reference features in PFCM PFC
 def find_ifc_version_with_tag(file, git_tag="git_tag"):
     root=open_xml_root(file)
@@ -230,7 +214,8 @@ def get_ifc_version_with_current_commit(start_dir="."):
     chdir.rollback_dir()
 
     if ifc_version == None:
-        print("    Not found matched PFCM version in feature IFC!\nIf you want to make PFCM tag release on this commit, you need to append a PFCM feature version description in feature IFC.")
+        print("    Not found matched PFCM version in feature IFC!")
+        print("    If you want to make PFCM tag release on this commit, you need to append a PFCM feature version description in feature IFC.")
 
     return ifc_version
 
@@ -265,6 +250,29 @@ def checkout_src_with_pfc(pfc_file):
     else:
         print("    Not found reference feature in PFC!")
 
+def find_newest_versions(version1, version2):  
+    v1_parts = list(map(int, version1.split('.')))
+    v2_parts = list(map(int, version2.split('.')))
+    for v1, v2 in zip(v1_parts, v2_parts):
+        if v1 < v2:
+            return version2
+        elif v1 > v2:
+            return version1
+        else :
+            return version1
+    return version1
+
+# List all feature dependency of PFC
+def list_feature_dependency_wit_pfc(pfcm_pfc):
+    dependency_list={}
+    root=open_xml_root(pfcm_pfc)
+    for xml_feature in root.findall('Feature/Dependency'):
+        if dependency_list.get(xml_feature.find('Name').text) == None:
+            dependency_list[xml_feature.find('Name').text]=xml_feature.find('Version').text
+        else:
+            dependency_list[xml_feature.find('Name').text]=find_newest_versions(dependency_list.get(xml_feature.find('Name').text), xml_feature.find('Version').text)
+    return dependency_list
+
 
 # Checkout all source code with workspace manifest.xml
 def checkout_src_with_mainfest():
@@ -279,6 +287,16 @@ def parse_ifc():
     print("    todo!")
 
 
+
+####################################################################################################
+####################################################################################################
+#                                                                                                  #
+# Test cases                                                                                       #
+#                                                                                                  #
+####################################################################################################
+####################################################################################################
+
+
 print("Try to Search all git repositories:")
 git_folders = search_git_repo(ref_pfcm_src_path)
 if git_folders:
@@ -287,7 +305,7 @@ if git_folders:
             print("    find .git in ", folder)
     else:
         print("    Not found .git in here!")
-print("    \n")
+print("\n")
 
 print("Try to Search all PFCM IFC:")
 ifc_files = search_ifc(ref_pfcm_src_path)
@@ -296,7 +314,7 @@ if ifc_files:
         print("    find ", file)
 else:
     print("    Not found IFC in here!")
-print("    \n")
+print("\n")
 
 print("Try to Search all PFCM PFC:")
 pfc_files = search_pfc(ref_pfcm_src_path)
@@ -305,11 +323,11 @@ if pfc_files:
         print("    find ", file)
 else:
     print("    Not found PFC in here!")
-print("    \n")
+print("\n")
 
 print("Try Parse IFC")
 parse_ifc()
-print("    \n")
+print("\n")
 
 print("Parse PFC")
 pfc_files = search_pfc(ref_pfcm_src_path)
@@ -319,7 +337,7 @@ if pfc_files:
         parse_pfc(file)
 else:
     print("    Not found PFC in here!")
-print("    \n")
+print("\n")
 
 
 
@@ -336,7 +354,7 @@ if pfc_files:
         else:
             print("    Not found reference feature in PFC!")
     print("    Not found PFC in here!")
-print("    \n")
+print("\n")
 
 
 # import git  # pip install gitpython
@@ -348,7 +366,7 @@ if commit_hash :
     print("    commit hash : ", commit_hash)
 else:
     print("    Not found commit hash")
-print("    \n")
+print("\n")
 
 print("Get git HEAD commit tag")
 commit_tag=get_head_commit_tag(ref_pfcm_src_path)
@@ -356,7 +374,7 @@ if commit_tag :
     print("    commit tag : ", commit_tag)
 else:
     print("    Not found commit tag")
-print("    \n")
+print("\n")
 
 print("List git remote URL")
 remotes=list_git_remote_url(ref_pfcm_src_path)
@@ -365,38 +383,44 @@ if remotes :
         print(f"    {name}: {url}")
 else:
     print("    Not found git remote")
-print("    \n")
+print("\n")
 
 print("Check all repositories HEAD commit has tag and PFCM version")
 check_all_repo_has_ready_for_pfcm_tag()
-print("    \n")
+print("\n")
 
 print("Update all repositories HEAD commit hash to workspace manifest.xml")
 update_manfest()
-print("    \n")
+print("\n")
 
 print("List all untracking and modified files")
 list_untracking_and_modified()
-print("    \n")
+print("\n")
 
 print("Checkout all source code with PFC")
 checkout_src_with_pfc(ref_pfcm_pfc)
-print("    \n")
+print("\n")
 
 print("Checkout all source code with workspace manifest.xml")
 checkout_src_with_mainfest()
-print("    \n")
+print("\n")
 
 print("Sync feature cruuently PFCM version to PFC dependency")
 update_feature_to_pfc()
-print("    \n")
+print("\n")
 
 print("Check featrue has existing in PFC")
 parse_ifc()
-print("    \n")
+print("\n")
 
 print("Search PFCM version as HEAD commit in feature IFC")
 print("    Match IFC version : ", get_ifc_version_with_current_commit(ref_pfcm_chipset_src_path))
 print("    Match IFC version : ", get_ifc_version_with_current_commit(ref_pfcm_kernel_base_src_path))
-print("    \n")
+print("\n")
 
+
+print("Parse all dependency description with PFC")
+dependency_list=list_feature_dependency_wit_pfc(ref_pfcm_pfc)
+for feature_name, feature_version in dependency_list.items():
+    print(f"    {feature_name}: {feature_version}")
+print("\n")
