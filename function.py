@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
+import re
 import os
+import git
 import subprocess
 
 ref_pfcm_src_path="..\\bhs"
@@ -57,11 +59,13 @@ def search_filename_extension_without_sub_folder(start_dir="./", search_string="
 
 
 def open_xml_root(file):
+    xml_file_node={}
     import xml.etree.ElementTree as ET
     print("    Parse xml file : ", file)
     tree = ET.parse(file)
     root = tree.getroot()
-    return root
+    xml_file_node[tree]=root
+    return xml_file_node
 
 
 
@@ -98,8 +102,9 @@ def parse_xml_element(root_element):
 
 # Parse PFC
 def parse_pfc(file):
-    root=open_xml_root(file)
-    parse_xml_element(root)
+    xml_file_node=open_xml_root(file)
+    for tree, root in xml_file_node.items():
+        parse_xml_element(root)
 
 
 # Get git HEAD commit hash
@@ -167,29 +172,31 @@ def list_all_ref_features_in_pfc(file):
     workspace={}
     features={}
     # dependency_list={}
-    root=open_xml_root(file)
-    for xml_feature in root.findall('Feature'):
-        features["Url"] = xml_feature.find('Repository/Url').text
-        features["Tag"] = xml_feature.find('Repository/Tag').text
-        features["Root"] = xml_feature.find('Root').text
-        features["Name"] = xml_feature.find('Name').text
-        features["Version"] = xml_feature.find('Version').text
-        # for xml_dependency in xml_feature.findall('Dependency'):
-        #     dependency_list["Name"] = xml_dependency.find('Name').text
-        #     dependency_list["Version"] = xml_dependency.find('Version').text
-        workspace[xml_feature.find('Root').text]=features
-    return workspace
+    xml_file_node=open_xml_root(file)
+    for tree, root in xml_file_node.items():
+        for xml_feature in root.findall('Feature'):
+            features["Url"] = xml_feature.find('Repository/Url').text
+            features["Tag"] = xml_feature.find('Repository/Tag').text
+            features["Root"] = xml_feature.find('Root').text
+            features["Name"] = xml_feature.find('Name').text
+            features["Version"] = xml_feature.find('Version').text
+            # for xml_dependency in xml_feature.findall('Dependency'):
+            #     dependency_list["Name"] = xml_dependency.find('Name').text
+            #     dependency_list["Version"] = xml_dependency.find('Version').text
+            workspace[xml_feature.find('Root').text]=features
+        return workspace
 
 # List all reference features in PFCM PFC
 def find_ifc_version_with_tag(file, git_tag="git_tag"):
-    root=open_xml_root(file)
-    for xml_feature in root.findall('Feature'):
-        # print(xml_feature)
-        # print(xml_feature.find('Repository/Tag').text)
-        if xml_feature.find('Repository/Tag').text == git_tag:
-            print("    git tag matched : ", git_tag, ", it mappoing PFCM version : ", xml_feature.find('Version').text)
-            return xml_feature.find('Version').text
-    return None
+    xml_file_node=open_xml_root(file)
+    for tree, root in xml_file_node.items():
+        for xml_feature in root.findall('Feature'):
+            # print(xml_feature)
+            # print(xml_feature.find('Repository/Tag').text)
+            if xml_feature.find('Repository/Tag').text == git_tag:
+                print("    git tag matched : ", git_tag, ", it mappoing PFCM version : ", xml_feature.find('Version').text)
+                return xml_feature.find('Version').text
+        return None
 
 # Search PFCM version as HEAD commit in feature IFC
 def get_ifc_version_with_current_commit(start_dir="."):
@@ -265,14 +272,74 @@ def find_newest_versions(version1, version2):
 # List all feature dependency of PFC
 def list_feature_dependency_wit_pfc(pfcm_pfc):
     dependency_list={}
-    root=open_xml_root(pfcm_pfc)
-    for xml_feature in root.findall('Feature/Dependency'):
-        if dependency_list.get(xml_feature.find('Name').text) == None:
-            dependency_list[xml_feature.find('Name').text]=xml_feature.find('Version').text
-        else:
-            dependency_list[xml_feature.find('Name').text]=find_newest_versions(dependency_list.get(xml_feature.find('Name').text), xml_feature.find('Version').text)
-    return dependency_list
+    xml_file_node=open_xml_root(pfcm_pfc)
+    for tree, root in xml_file_node.items():
+        for xml_feature in root.findall('Feature/Dependency'):
+            if dependency_list.get(xml_feature.find('Name').text) == None:
+                dependency_list[xml_feature.find('Name').text]=xml_feature.find('Version').text
+            else:
+                dependency_list[xml_feature.find('Name').text]=find_newest_versions(dependency_list.get(xml_feature.find('Name').text), xml_feature.find('Version').text)
+        return dependency_list
 
+def update_pfc_feature_dependency(pfcm_feature_name, pfcm_feature_version, pfcm_feature_tag, pfcm_pfc):
+
+    # This way not work in our case. Because it will make the comment message lost in new PFCM PFC file.
+    # So we try to replace with string replace rule not xml parser to modify it.
+    #  
+    # xml_file_node=open_xml_root(pfcm_pfc)
+    # for tree, root in xml_file_node.items():
+    #     for xml_feature in root.findall('Feature/Dependency'):
+    #         if xml_feature.find('Name').text == pfcm_feature_name:
+    #             xml_feature.find('Version').text=pfcm_feature_version
+    #     for xml_feature in root.findall('Feature'):
+    #         if xml_feature.find('Name').text == pfcm_feature_name:
+    #             xml_feature.find('Version').text=pfcm_feature_version
+    #     tree.write(pfcm_pfc, encoding='utf-8', xml_declaration=True)
+
+    with open(pfcm_pfc, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+
+    with open('modified.xml', 'w', encoding='utf-8') as file:
+        feature=False
+        depandency=False
+        feature_name=""
+        depandency_feature_name=""
+
+        for line in lines:
+            if line.strip() == f"<Feature>":
+                feature=True
+            elif line.strip() == f"</Feature>":
+                feature=False
+                feature_name=None
+            elif feature and line.strip() == f"<Dependency>":
+                depandency=True
+            elif feature and line.strip() == f"</Dependency>":
+                depandency=False
+            elif feature and re.match(r"<Name>.*</Name>", line.strip()):
+                if depandency:
+                    depandency_feature_name = re.sub(r"</Name>.*", f"", re.sub(r".*<Name>", f"", line.strip()))
+                else:
+                    feature_name = re.sub(r"</Name>.*", f"", re.sub(r".*<Name>", f"", line.strip()))
+            elif feature and re.match(r"<Version>.*</Version>", line.strip()):
+                if depandency:
+                    if depandency_feature_name == pfcm_feature_name:
+                        line = re.sub(r">.*<", f">{pfcm_feature_version}<", line)
+                        print("    Update feature version in dependency!")
+                else:
+                    if feature_name == pfcm_feature_name:
+                        line = re.sub(r">.*<", f">{pfcm_feature_version}<", line)
+                        print("    Update feature version in feature!")
+            elif feature and re.match(r"<Tag>.*</Tag>", line.strip()):
+                if feature_name == pfcm_feature_name:
+                    line = re.sub(r">.*<", f">{pfcm_feature_tag}<", line)
+                    print("    Update feature tag in feature!")
+            elif re.match(r"<!--.*-->.*", line.strip()):
+                string=re.sub(r"<!-- *", "" , line.strip())
+                if string.startswith(pfcm_feature_name):
+                    line=re.sub(r"<!--.*-->", f"<!-- {pfcm_feature_name} {pfcm_feature_version} -->" , line)
+                    print("    Update feature comment!")
+            
+            file.write(line)
 
 # Checkout all source code with workspace manifest.xml
 def checkout_src_with_mainfest():
@@ -286,7 +353,10 @@ def update_feature_to_pfc():
 def parse_ifc():
     print("    todo!")
 
-
+def clone_repository(bare, path, replace_source):
+    if replace_source:
+        bare = re.sub(r"http://gerrit.insyde.com:8080/", f"ssh://gerrit.insyde.com:29418/", bare)
+    git.Git(path).clone(bare)
 
 ####################################################################################################
 ####################################################################################################
@@ -295,7 +365,6 @@ def parse_ifc():
 #                                                                                                  #
 ####################################################################################################
 ####################################################################################################
-
 
 print("Try to Search all git repositories:")
 git_folders = search_git_repo(ref_pfcm_src_path)
@@ -307,7 +376,8 @@ if git_folders:
         print("    Not found .git in here!")
 print("\n")
 
-print("Try to Search all PFCM IFC:")
+# test case
+print("[ Try to Search all PFCM IFC ]:")
 ifc_files = search_ifc(ref_pfcm_src_path)
 if ifc_files:
     for file in ifc_files:
@@ -316,7 +386,8 @@ else:
     print("    Not found IFC in here!")
 print("\n")
 
-print("Try to Search all PFCM PFC:")
+# test case
+print("[ Try to Search all PFCM PFC ]:")
 pfc_files = search_pfc(ref_pfcm_src_path)
 if pfc_files:
     for file in pfc_files:
@@ -325,11 +396,13 @@ else:
     print("    Not found PFC in here!")
 print("\n")
 
-print("Try Parse IFC")
+# test case
+print("[ Try Parse IFC ]")
 parse_ifc()
 print("\n")
 
-print("Parse PFC")
+# test case
+print("[ Parse PFC ]")
 pfc_files = search_pfc(ref_pfcm_src_path)
 if pfc_files:
     for file in pfc_files:
@@ -339,9 +412,8 @@ else:
     print("    Not found PFC in here!")
 print("\n")
 
-
-
-print("List all reference features in PFCM PFC:")
+# test case
+print("[ List all reference features in PFCM PFC ]:")
 pfc_files = search_pfc(ref_pfcm_src_path)
 if pfc_files:
     for file in pfc_files:
@@ -356,11 +428,8 @@ if pfc_files:
     print("    Not found PFC in here!")
 print("\n")
 
-
-# import git  # pip install gitpython
-# git.Git("/your/directory/to/clone").clone("git://gitorious.org/git-python/mainline.git")
-
-print("Get git HEAD commit hash")
+# test case
+print("[ Get git HEAD commit hash ]")
 commit_hash=get_head_commit_hash(ref_pfcm_src_path)
 if commit_hash :
     print("    commit hash : ", commit_hash)
@@ -368,7 +437,8 @@ else:
     print("    Not found commit hash")
 print("\n")
 
-print("Get git HEAD commit tag")
+# test case
+print("[ Get git HEAD commit tag ]")
 commit_tag=get_head_commit_tag(ref_pfcm_src_path)
 if commit_tag :
     print("    commit tag : ", commit_tag)
@@ -376,7 +446,8 @@ else:
     print("    Not found commit tag")
 print("\n")
 
-print("List git remote URL")
+# test case
+print("[ List git remote URL ]")
 remotes=list_git_remote_url(ref_pfcm_src_path)
 if remotes :
     for name, url in remotes.items():
@@ -385,42 +456,64 @@ else:
     print("    Not found git remote")
 print("\n")
 
-print("Check all repositories HEAD commit has tag and PFCM version")
+# test case
+print("[ Check all repositories HEAD commit has tag and PFCM version ]")
 check_all_repo_has_ready_for_pfcm_tag()
 print("\n")
 
-print("Update all repositories HEAD commit hash to workspace manifest.xml")
+# test case
+print("[ Update all repositories HEAD commit hash to workspace manifest.xml ]")
 update_manfest()
 print("\n")
 
-print("List all untracking and modified files")
+# test case
+print("[ List all untracking and modified files ]")
 list_untracking_and_modified()
 print("\n")
 
-print("Checkout all source code with PFC")
+# test case
+print("[ Checkout all source code with PFC ]")
 checkout_src_with_pfc(ref_pfcm_pfc)
 print("\n")
 
-print("Checkout all source code with workspace manifest.xml")
+# test case
+print("[ Checkout all source code with workspace manifest.xml ]")
 checkout_src_with_mainfest()
 print("\n")
 
-print("Sync feature cruuently PFCM version to PFC dependency")
+# test case
+print("[ Sync feature cruuently PFCM version to PFC dependency ]")
 update_feature_to_pfc()
 print("\n")
 
-print("Check featrue has existing in PFC")
+# test case
+print("[ Check featrue has existing in PFC ]")
 parse_ifc()
 print("\n")
 
-print("Search PFCM version as HEAD commit in feature IFC")
+# test case
+print("[ Search PFCM version as HEAD commit in feature IFC ]")
 print("    Match IFC version : ", get_ifc_version_with_current_commit(ref_pfcm_chipset_src_path))
 print("    Match IFC version : ", get_ifc_version_with_current_commit(ref_pfcm_kernel_base_src_path))
 print("\n")
 
-
-print("Parse all dependency description with PFC")
+# test case
+print("[ Parse all dependency description with PFC ]")
 dependency_list=list_feature_dependency_wit_pfc(ref_pfcm_pfc)
 for feature_name, feature_version in dependency_list.items():
     print(f"    {feature_name}: {feature_version}")
 print("\n")
+
+# test case
+print("[ Update PFC feature dependency ]")
+pfcm_feature_name="Intel_BirchStreamEDK2"
+pfcm_feature_version="99.99.99.9999"
+pfcm_feature_tag="test_tag"
+pfcm_pfc=ref_pfcm_pfc
+update_pfc_feature_dependency(pfcm_feature_name, pfcm_feature_version, pfcm_feature_tag, pfcm_pfc)
+print("\n")
+
+# test case
+# url[ ="http://gerrit.insyde.com:8080/H2O-SEG-Feature/InsydeCrPkg ]"
+# path="Intel_BHS"
+# clone_repository(url, path, True)
