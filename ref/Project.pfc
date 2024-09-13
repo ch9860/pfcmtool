@@ -13,17 +13,17 @@
     written permission of Insyde Software Corporation.
 -->
 <Features>
-  <!-- Intel_BirchStream_MultiBoard_Rev5.6 05.61.15.0054 -->
+  <!-- Intel_BirchStream_MultiBoard_Rev5.6 05.61.33.0055 -->
   <Feature>
     <Name>Intel_BirchStream_MultiBoard_Rev5.6</Name>
     <Root>Board/Intel/BirchStreamMultiBoardPkg</Root>
     <Category>Chipset</Category>
-    <Version>05.61.15.0054</Version>
+    <Version>05.61.33.0055</Version>
     <Revision>4</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-Server-CRB/Intel_BirchStream_MultiBoard_Rev5.6</Url>
-      <Tag>05.61.15.0054</Tag>
+      <Tag>05.61.33.0055</Tag>
     </Repository>
     <Dependency>
       <Name>Aspeed_Ast2xxx</Name>
@@ -43,19 +43,19 @@
     </Dependency>
     <Dependency>
       <Name>InsydeIpmiPkg</Name>
-      <Version>02.01.06.0029</Version>
+      <Version>02.01.06.0037</Version>
     </Dependency>
     <Dependency>
       <Name>InsydeSegFeaturePkg</Name>
-      <Version>02.01.04.0012</Version>
+      <Version>02.01.04.0014</Version>
     </Dependency>
     <Dependency>
       <Name>Intel_BirchStream</Name>
-      <Version>05.61.15.0054</Version>
+      <Version>05.61.33.0055</Version>
     </Dependency>
     <Dependency>
       <Name>Intel_BirchStreamEDK2</Name>
-      <Version>33.98.01.0001</Version>
+      <Version>24.09.02.0001</Version>
     </Dependency>
     <Dependency>
       <Name>Intel_EDK2Platforms</Name>
@@ -63,11 +63,11 @@
     </Dependency>
     <Dependency>
       <Name>Kernel_BaseToolsBin_Rev5.6</Name>
-      <Version>05.61.15</Version>
+      <Version>05.61.33</Version>
     </Dependency>
     <Dependency>
       <Name>Kernel_Base_Rev5.6</Name>
-      <Version>05.61.15</Version>
+      <Version>05.61.33</Version>
     </Dependency>
     <Dependency>
       <Name>Kernel_AhciBusDxeBin_Rev5.6</Name>
@@ -79,7 +79,7 @@
     </Dependency>
     <Dependency>
       <Name>Kernel_Csm_Rev5.6</Name>
-      <Version>05.61.10</Version>
+      <Version>05.61.33</Version>
     </Dependency>
     <Dependency>
       <Name>Kernel_EhciDxeBin_Rev5.6</Name>
@@ -91,7 +91,7 @@
     </Dependency>
     <Dependency>
       <Name>Kernel_H2ODebug_Rev5.6</Name>
-      <Version>05.00.12.0020</Version>
+      <Version>05.01.07.0018</Version>
     </Dependency>
     <Dependency>
       <Name>Kernel_InsydeSamplePkg_Rev5.6</Name>
@@ -99,7 +99,7 @@
     </Dependency>
     <Dependency>
       <Name>Kernel_NvmExpressDxeBin_Rev5.6</Name>
-      <Version>01.09.05.0129</Version>
+      <Version>01.09.21.0522</Version>
     </Dependency>
     <Dependency>
       <Name>Kernel_NvmExpressPeiBin_Rev5.6</Name>
@@ -139,7 +139,7 @@
       <Fdf>Project</Fdf>
     </Package>
   </Feature>
-  <!-- Aspeed_Ast2xxx 00.00.02.0033 -->
+  <!-- Aspeed_Ast2xxx 00.00.02.0033 feature -->
   <Feature>
     <Name>Aspeed_Ast2xxx</Name>
     <Root>Sio/SioAst2xxxPkg</Root>
@@ -151,112 +151,12 @@
       <Tag>00.00.02.0033_Ast2xxx</Tag>
     </Repository>
     <Dependency>
-      <Name>Aspeed_Ast2xxx</Name>
-      <Version>00.00.02.0033</Version>
+      <Name>Kernel-EDK2</Name>
+      <Version>05.50.21</Version>
     </Dependency>
     <Dependency>
-      <Name>InsydeAdvBootPkg</Name>
-      <Version>01.01.55.0005</Version>
-    </Dependency>
-    <Dependency>
-      <Name>InsydeCrPkg</Name>
-      <Version>02.01.08.0002</Version>
-    </Dependency>
-    <Dependency>
-      <Name>InsydeH2OUvePkg</Name>
-      <Version>21.01.04.0013</Version>
-    </Dependency>
-    <Dependency>
-      <Name>InsydeIpmiPkg</Name>
-      <Version>02.01.06.0029</Version>
-    </Dependency>
-    <Dependency>
-      <Name>InsydeSegFeaturePkg</Name>
-      <Version>02.01.04.0012</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Intel_BirchStream</Name>
-      <Version>05.61.15.0054</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Intel_BirchStreamEDK2</Name>
-      <Version>33.98.01.0001</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Intel_EDK2Platforms</Name>
-      <Version>24.19.04.0001</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_BaseToolsBin_Rev5.6</Name>
-      <Version>05.61.15</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_Base_Rev5.6</Name>
-      <Version>05.61.15</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_AhciBusDxeBin_Rev5.6</Name>
-      <Version>02.12.13.0328</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_AhciBusPeiBin_Rev5.6</Name>
-      <Version>02.12.13.0327</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_Csm_Rev5.6</Name>
-      <Version>05.61.10</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_EhciDxeBin_Rev5.6</Name>
-      <Version>03.05.26.0620</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_EhciPeiBin_Rev5.6</Name>
-      <Version>03.04.49.1129</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_H2ODebug_Rev5.6</Name>
-      <Version>05.00.12.0020</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_InsydeSamplePkg_Rev5.6</Name>
-      <Version>05.61.12</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_NvmExpressDxeBin_Rev5.6</Name>
-      <Version>01.09.05.0129</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_NvmExpressPeiBin_Rev5.6</Name>
-      <Version>02.12.26.0621</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_SdhcDxeBin_Rev5.6</Name>
-      <Version>03.07.09.0227</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_SdhcPeiBin_Rev5.6</Name>
-      <Version>02.17.01.0103</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_SioDummyPkg_Rev5.6</Name>
-      <Version>05.61.08</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_UfsDxeBin_Rev5.6</Name>
-      <Version>01.01.18.0428</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_UfsPeiBin_Rev5.6</Name>
-      <Version>00.00.00.0000</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_XhciDxeBin_Rev5.6</Name>
-      <Version>00.00.00.0000</Version>
-    </Dependency>
-    <Dependency>
-      <Name>Kernel_XhciPeiBin_Rev5.6</Name>
-      <Version>00.00.00.0000</Version>
+      <Name>Kernel-Base</Name>
+      <Version>05.50.21</Version>
     </Dependency>
     <Package>
       <SourceDir>.</SourceDir>
@@ -298,68 +198,73 @@
       <Fdf>Package</Fdf>
     </Package>
   </Feature>
-  <!-- InsydeH2OUvePkg 21.01.04.0013 -->
+  <!-- InsydeH2OUvePkg 21.01.04.0013 feature -->
   <Feature>
     <Name>InsydeH2OUvePkg</Name>
     <Root>SegFeature/InsydeH2OUvePkg</Root>
     <Version>21.01.04.0013</Version>
-    <Revision>4</Revision>
+    <Revision>5</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-SEG-Feature/InsydeH2OUvePkg</Url>
-      <Tag>21.01.04.0013</Tag>
+    <Tag>21.01.04.0013</Tag>
     </Repository>
+    <Dependency>
+      <Name>Kernel-Base</Name>
+      <Version>05.53.09</Version>
+    </Dependency>
     <Package>
-      <SourceDir>.</SourceDir>
       <Dsc>Package</Dsc>
       <Fdf>Package</Fdf>
+      <SourceDir>.</SourceDir>
     </Package>
   </Feature>
-  <!-- InsydeIpmiPkg 02.01.06.0029 -->
+  <!-- InsydeIpmiPkg 02.01.06.0037 feature -->
   <Feature>
     <Name>InsydeIpmiPkg</Name>
     <Root>SegFeature/InsydeIpmiPkg</Root>
-    <Version>02.01.06.0029</Version>
-    <Revision>4</Revision>
+    <Category>Feature</Category>
+    <Version>02.01.06.0037</Version>
+    <Revision>5</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-SEG-Feature/InsydeIpmiPkg</Url>
-      <Tag>02.01.06.0029</Tag>
+      <Tag>02.01.06.0037</Tag>
     </Repository>
     <Package>
-      <SourceDir>.</SourceDir>
       <Dsc>Package</Dsc>
       <Fdf>Package</Fdf>
+      <SourceDir>.</SourceDir>
     </Package>
   </Feature>
-  <!-- InsydeSegFeaturePkg 02.01.04.0012 -->
+  <!-- InsydeSegFeaturePkg 02.01.04.0014 feature -->
   <Feature>
     <Name>InsydeSegFeaturePkg</Name>
     <Root>SegFeature/SegFeaturePkg</Root>
-    <Version>02.01.04.0012</Version>
-    <Revision>4</Revision>
+    <Category>Feature</Category>
+    <Version>02.01.04.0014</Version>
+    <Revision>5</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-SEG-Feature/InsydeSegFeaturePkg</Url>
-      <Tag>02.01.04.0012</Tag>
+      <Tag>02.01.04.0014</Tag>
     </Repository>
     <Package>
-      <SourceDir>.</SourceDir>
       <Dsc>Package</Dsc>
       <Fdf>Package</Fdf>
+      <SourceDir>.</SourceDir>
     </Package>
   </Feature>
-  <!-- Intel_BirchStream 05.61.15.0054 -->
+  <!-- Intel_BirchStream 05.61.33.0055 feature -->
   <Feature>
     <Name>Intel_BirchStream</Name>
     <Root>Intel/BirchStream</Root>
     <Category>Chipset</Category>
-    <Version>05.61.15.0054</Version>
-    <Revision>4</Revision>
+    <Version>05.61.33.0055</Version>
     <Repository>
       <Type>git</Type>
-      <Url>http://gerrit.insyde.com:8080/H2O-Server-CRB/Intel_BirchStream</Url>
-      <Tag>34D65</Tag>
+      <Url>https://gerrit.insyde.com/H2O-Server-CRB/Intel_BirchStream</Url>
+      <Tag>34D65_05.61.33</Tag>
     </Repository>
     <Package>
       <SourceDir>.</SourceDir>
@@ -367,16 +272,15 @@
       <Fdf>Package</Fdf>
     </Package>
   </Feature>
-  <!-- Intel_BirchStreamEDK2 33.98.01.0001 -->
+  <!-- Intel_BirchStreamEDK2 24.09.02.0001 feature -->
   <Feature>
     <Name>Intel_BirchStreamEDK2</Name>
     <Root>EDK2</Root>
-    <Version>33.98.01.0001</Version>
-    <Revision>4</Revision>
+    <Version>24.09.02.0001</Version>
     <Repository>
       <Type>git</Type>
-      <Url>http://gerrit.insyde.com:8080/H2O-Server-CRB/Intel_BirchStreamEDK2</Url>
-      <Tag>3398.D01.0001</Tag>
+      <Url>https://gerrit.insyde.com/H2O-Server-CRB/Intel_BirchStreamEDK2</Url>
+      <Tag>05.61.31</Tag>
     </Repository>
     <Package>
       <SourceDir>.</SourceDir>
@@ -427,12 +331,12 @@
       <Tag>05.60.52</Tag>
     </Repository>
   </Feature>
-  <!-- Kernel_Base_Rev5.6 05.61.15 -->
+  <!-- Kernel_Base_Rev5.6 05.61.33 feature -->
   <Feature>
     <Name>Kernel_Base_Rev5.6</Name>
     <Root>Insyde</Root>
     <Category>Kernel</Category>
-    <Version>05.61.15</Version>
+    <Version>05.61.33</Version>
     <Revision>4</Revision>
     <Exclude>InsydeModulePkg/Bus/Pci/AhciBusDxe</Exclude>
     <Exclude>InsydeModulePkg/Bus/Pci/AhciBusPei</Exclude>
@@ -453,32 +357,16 @@
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-Kernel/Kernel_Base_Rev5.6</Url>
-      <Tag>05.61.15</Tag>
+      <Tag>05.61.33</Tag>
     </Repository>
-    <Split>
-      <SplitVersion>05.61.12</SplitVersion>
-      <Dependency>
-        <Name>Kernel_InsydeSamplePkg_Rev5.6</Name>
-        <Version>05.61.12</Version>
-      </Dependency>
-      <Repository>
-        <Type>git</Type>
-        <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_InsydeSamplePkg_Rev5.6</Url>
-        <Tag>05.61.12</Tag>
-      </Repository>
-    </Split>
-    <Split>
-      <SplitVersion>05.61.08</SplitVersion>
-      <Dependency>
-        <Name>Kernel_SioDummyPkg_Rev5.6</Name>
-        <Version>05.61.08</Version>
-      </Dependency>
-      <Repository>
-        <Type>git</Type>
-        <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_SioDummyPkg_Rev5.6</Url>
-        <Tag>05.61.08</Tag>
-      </Repository>
-    </Split>
+    <Dependency>
+      <Name>Kernel_BaseToolsBin_Rev5.6</Name>
+      <Version>05.61.33</Version>
+    </Dependency>
+    <Dependency>
+      <Name>Kernel_EDK2_Rev5.6</Name>
+      <Version>05.61.33</Version>
+    </Dependency>
     <Split>
       <SplitVersion>05.60.48</SplitVersion>
       <Dependency>
@@ -488,7 +376,7 @@
       <Repository>
         <Type>git</Type>
         <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_AhciBusDxeBin_Rev5.6</Url>
-        <Tag>05.60.52</Tag>
+        <Tag>05.60.48</Tag>
       </Repository>
     </Split>
     <Split>
@@ -500,7 +388,7 @@
       <Repository>
         <Type>git</Type>
         <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_AhciBusPeiBin_Rev5.6</Url>
-        <Tag>05.60.52</Tag>
+        <Tag>05.60.48</Tag>
       </Repository>
     </Split>
     <Split>
@@ -524,7 +412,7 @@
       <Repository>
         <Type>git</Type>
         <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_EhciDxeBin_Rev5.6</Url>
-        <Tag>05.60.52</Tag>
+        <Tag>05.60.48</Tag>
       </Repository>
     </Split>
     <Split>
@@ -536,7 +424,7 @@
       <Repository>
         <Type>git</Type>
         <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_EhciPeiBin_Rev5.6</Url>
-        <Tag>05.60.52</Tag>
+        <Tag>05.60.48</Tag>
       </Repository>
     </Split>
     <Split>
@@ -647,6 +535,30 @@
         <Tag>05.60.48</Tag>
       </Repository>
     </Split>
+    <Split>
+      <SplitVersion>05.61.08</SplitVersion>
+      <Dependency>
+        <Name>Kernel_SioDummyPkg_Rev5.6</Name>
+        <Version>05.61.08</Version>
+      </Dependency>
+      <Repository>
+        <Type>git</Type>
+        <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_SioDummyPkg_Rev5.6</Url>
+        <Tag>05.61.08</Tag>
+      </Repository>
+    </Split>
+    <Split>
+      <SplitVersion>05.61.12</SplitVersion>
+      <Dependency>
+        <Name>Kernel_InsydeSamplePkg_Rev5.6</Name>
+        <Version>05.61.12</Version>
+      </Dependency>
+      <Repository>
+        <Type>git</Type>
+        <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_InsydeSamplePkg_Rev5.6</Url>
+        <Tag>05.61.12</Tag>
+      </Repository>
+    </Split>
     <Package>
       <SourceDir>InsydeFlashDevicePkg</SourceDir>
       <Dsc>Package</Dsc>
@@ -673,17 +585,17 @@
       <Fdf>Package</Fdf>
     </Package>
   </Feature>
-  <!-- Kernel_BaseToolsBin_Rev5.6 05.61.15 -->
+  <!-- Kernel_BaseToolsBin_Rev5.6 05.61.33 feature -->
   <Feature>
     <Name>Kernel_BaseToolsBin_Rev5.6</Name>
     <Root>BaseTools</Root>
     <Category>Kernel</Category>
-    <Version>05.61.15</Version>
+    <Version>05.61.33</Version>
     <Revision>4</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-Kernel/Kernel_BaseToolsBin_Rev5.6</Url>
-      <Tag>05.61.15</Tag>
+      <Tag>05.61.33</Tag>
     </Repository>
   </Feature>
   <!-- Kernel_Csm_Rev5.6 05.61.10 -->
@@ -691,12 +603,12 @@
     <Name>Kernel_Csm_Rev5.6</Name>
     <Root>Insyde/InsydeModulePkg/Csm</Root>
     <Category>Kernel</Category>
-    <Version>05.61.10</Version>
+    <Version>05.61.33</Version>
     <Revision>4</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_Csm_Rev5.6</Url>
-      <Tag>05.61.10</Tag>
+      <Tag>05.61.33</Tag>
     </Repository>
   </Feature>
   <!-- Kernel_EhciDxeBin_Rev5.6 03.05.26.0620 -->
@@ -725,17 +637,17 @@
       <Tag>05.60.52</Tag>
     </Repository>
   </Feature>
-  <!-- Kernel_H2ODebug_Rev5.6 05.00.12.0020 -->
+  <!-- Kernel_H2ODebug_Rev5.6 05.61.29 feature -->
   <Feature>
     <Name>Kernel_H2ODebug_Rev5.6</Name>
     <Root>Insyde/InsydeModulePkg/H2ODebug</Root>
     <Category>Kernel</Category>
-    <Version>05.00.12.0020</Version>
+    <Version>05.01.07.0018</Version>
     <Revision>4</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_H2ODebug_Rev5.6</Url>
-      <Tag>05.60.52</Tag>
+      <Tag>05.61.29</Tag>
     </Repository>
   </Feature>
   <!-- Kernel_InsydeSamplePkg_Rev5.6 05.61.12 -->
@@ -751,17 +663,17 @@
       <Tag>05.61.12</Tag>
     </Repository>
   </Feature>
-  <!-- Kernel_NvmExpressDxeBin_Rev5.6 01.09.05.0129 -->
+  <!-- Kernel_NvmExpressDxeBin_Rev5.6 05.61.21 feature -->
   <Feature>
     <Name>Kernel_NvmExpressDxeBin_Rev5.6</Name>
     <Root>Insyde/InsydeModulePkg/Bus/Pci/NvmExpressDxe</Root>
     <Category>Kernel</Category>
-    <Version>01.09.05.0129</Version>
+    <Version>01.09.21.0522</Version>
     <Revision>4</Revision>
     <Repository>
       <Type>git</Type>
       <Url>http://gerrit.insyde.com:8080/H2O-Kernel-Feature/Kernel_NvmExpressDxeBin_Rev5.6</Url>
-      <Tag>05.61.05</Tag>
+      <Tag>05.61.21</Tag>
     </Repository>
   </Feature>
   <!-- Kernel_NvmExpressPeiBin_Rev5.6 02.12.26.0621 -->
